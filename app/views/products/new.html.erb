@@ -1,5 +1,5 @@
 <h1>New Product</h1>
-<%= form_for @product do |f| %>
+<%= form_for @product, url: new_product_path, method: :post do |f| %>
   <%= f.label :name %>
   <%= f.text_field :name %>
   <br />
@@ -13,3 +13,23 @@
   <%= f.text_field :inventory %>
   <%= f.submit "submit" %>
 <% end %>
+
+<script>
+$(function() {
+  $("form").submit(function(e) {
+    e.preventDefault()
+    const postData = {name: $("#product_name").val(), price: $("#product_price").val(), inventory: $("#product_inventory").val(), description: $("#product_description").val()}
+    fetch("http://localhost:3000/products/new", {
+      method: "post",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'},
+      body: JSON.stringify({product: postData})
+    }).then(resp => resp.json())
+    .then(json => {
+        @product = json
+    })
+  })
+})
+
+</script>
